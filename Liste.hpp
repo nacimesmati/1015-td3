@@ -28,7 +28,7 @@ public:
 			nElements_ = autre.nElements_;
 			elements_ = make_unique<shared_ptr<T>[]>(capacite_);
 
-			for (int i : iter::range(capacite_))
+			for (int i : range(capacite_))
 			{
 				elements_[i] = autre.elements_[i];
 			}
@@ -60,37 +60,38 @@ public:
 		elements_[nElements_++] = element;
 	}
 
-	void retirer(const shared_ptr<T> aRetirer) 
-	{ 
-		for (shared_ptr<T>& d : enSpan()) { 
+	void retirer(const shared_ptr<T> aRetirer)
+	{
+		for (shared_ptr<T>& d : enSpan()) {
 			if (d == aRetirer) {
 				if (nElements_ > 1)
-					d = elements_[nElements_ - 1]; 
-				nElements_--; 
+					d = elements_[nElements_ - 1];
+				nElements_--;
 			}
 		}
 	}
 
 	void afficher() const
 	{
-		for (const shared_ptr<T> d : enSpan()) 
-			d->afficher(); 
+		for (const shared_ptr<T> d : enSpan())
+			d->afficher();
 	}
 
+	T& operator[] (int index) { return *(elements_[index]); } 
 
-	gsl::span<shared_ptr<T>> enSpan() const { return { elements_, nElements_ }; }  
+	gsl::span<shared_ptr<T>> enSpan() const { return { elements_.get(), nElements_ }; }
 private:
 
 	void changerCapacite(size_t nouvelleCapacite)
 	{
 		assert(nouvelleCapacite >= nElements_);
 
-		unique_ptr<shared_ptr<T>>  nouvelleListe = make_unique<shared_ptr<T>>[nouvelleCapacite];
+		unique_ptr<shared_ptr<T>[]>  nouvelleListe = make_unique<shared_ptr<T>[]>(nouvelleCapacite);
 		for (size_t i : range(nElements_)) {
-			nouvelleListe[i] = move(elements_[i]);
+			nouvelleListe[i] = elements_[i];
 		}
 
-		elements_ = nouvelleListe;
+		elements_ = move(nouvelleListe);
 		capacite_ = nouvelleCapacite;
 	}
 
@@ -99,4 +100,3 @@ private:
 	size_t nElements_ = 0, capacite_ = 0;  // Pas besoin de déclarer explicitement un corps de constructeur avec ces initialisations.
 	unique_ptr<shared_ptr<T>[]> elements_ = nullptr;
 };
-

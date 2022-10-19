@@ -9,5 +9,4 @@ struct Concepteur
 	std::string nom;
 	int anneeNaissance;
 	std::string pays;
-	Liste<Jeu> jeuxConcus; 
 };
