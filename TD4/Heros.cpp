@@ -1,4 +1,3 @@
-#pragma once
 #include "lectureBinaire.hpp"
 #include <fstream>
 #include <vector>
@@ -8,8 +7,3 @@
 #include <cassert>
 #include "bibliotheque_cours.hpp"
 using namespace std;
-
-class Heros : public Personnage {
-public:
-	Heros()
-};
