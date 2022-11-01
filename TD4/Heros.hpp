@@ -11,5 +11,11 @@ using namespace std;
 
 class Heros : public Personnage {
 public:
-	Heros()
+	Heros() = default;
+	const string getNom() const { return nom_; }
+
+
+private: 
+	string nom_, titre_;
+	vector<shared_ptr<string>> allies_; 
 };

@@ -8,6 +8,7 @@ using namespace iter;
 
 class Affichable {
 public:
-	virtual void afficher() = 0;
-	virtual void changerCouleur() = 0;
+	virtual ostream& afficher(ostream& o) const = 0;
+	/*virtual void changerCouleur() = 0;*/
+
 };

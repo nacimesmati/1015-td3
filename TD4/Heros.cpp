@@ -6,4 +6,4 @@
 #include <memory>
 #include <cassert>
 #include "bibliotheque_cours.hpp"
-using namespace std;
+using namespace std; 

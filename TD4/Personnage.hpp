@@ -10,11 +10,20 @@ using namespace iter;
 
 class Personnage : public Affichable {
 public:
-	Personnage(string nom, string titre) :nom_(nom), titre_(titre){}
-	virtual ~Personnage() = default;
-	void afficher() ;
-	void changerCouleur(ifstream fichier, string codeCouleur) ; 
+	Personnage() = default;
+	Personnage(string nom, string titre) :nom_(nom), titre_(titre) {}
+	//void changerCouleur(ifstream fichier, string codeCouleur); 
+	
+	//getter
+	const string& getTitre() const;
+	const string& getNom() const;
 
+	//setter
+	void setTitre(const string& titre);
+	void setNom(const string& nom);
+
+	//Affichage
+	ostream& afficher(ostream& o) const override;
 private:
-	string nom_, titre_;     
+	string nom_, titre_;
 };
