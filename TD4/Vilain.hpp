@@ -9,15 +9,15 @@
 #include "bibliotheque_cours.hpp"
 using namespace std;
 
-class Heros : public Personnage {
+class Vilain : public Personnage {
 public:
-	Heros() = default;
-	Heros(ifstream& fichier); 
+	Vilain() = default;
+	Vilain(ifstream& fichier);
 
 
 	void afficher(ostream& os) const override;
 
-private: 
-	string ennemi_; 
-	vector<string> allies_; 
+private:
+	string objectif_; 
+	
 };

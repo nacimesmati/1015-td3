@@ -12,8 +12,8 @@ class Personnage : public Affichable {
 public:
 	Personnage() = default;
 	Personnage(string nom, string titre) :nom_(nom), titre_(titre) {}
-	//void changerCouleur(ifstream fichier, string codeCouleur); 
-	
+	virtual ~Personnage() = default; 
+
 	//getter
 	const string& getTitre() const;
 	const string& getNom() const;
@@ -23,7 +23,10 @@ public:
 	void setNom(const string& nom);
 
 	//Affichage
-	ostream& afficher(ostream& o) const override;
-private:
+	void afficher(ostream& o) const override; 
+	ostream& changerCouleur(ostream& o, const string& codeCouleur) const override;    
+	friend ostream& operator<< (ostream& os, const Personnage& p); 
+
+protected: 
 	string nom_, titre_;
 };

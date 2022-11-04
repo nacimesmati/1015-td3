@@ -6,6 +6,7 @@
 #include "bibliotheque_cours.hpp"
 #include "Affichable.hpp"
 #include "Personnage.hpp"
+#include "Vilain.hpp"
 #include "Heros.hpp"
 
 using namespace std;
@@ -23,6 +24,12 @@ void testsPourCouvertureLectureBinaire()
 	assert(lireUintTailleVariable(iss) == 0x12);
 	assert(lireUintTailleVariable(iss) == 0x4321);
 	assert(lireUintTailleVariable(iss) == 0xFEDCBA98);
+}
+
+ostream& operator<< (ostream& os, const Personnage& p)
+{
+	p.afficher(os);
+	return os; 
 }
 
 int main()
@@ -45,8 +52,41 @@ int main()
 	ifstream fichierVilains = ouvrirFichierBinaire("vilains.bin");
 
 	//TODO: Votre code pour le main commence ici (mais vous pouvez aussi ajouter/modifier du code avant si nécessaire)
-	int nHeros = lireUintTailleVariable(fichierHeros);
-	Heros hero;
-	hero.getNom() = lireString(fichierHeros)
+	size_t nHeros = lireUintTailleVariable(fichierHeros);
+	size_t nVilains= lireUintTailleVariable(fichierVilains);
+
+
+	vector<shared_ptr<Heros>> vHeros; 
+	vector<shared_ptr<Vilain>> vVilain;
+	vector<shared_ptr<Personnage>> vPersonnage;
+
+
+	for (size_t i : range(nHeros)) {
+		Heros heros(fichierHeros);
+		shared_ptr<Heros> ptrHeros = make_shared<Heros>(heros);
+		vHeros.push_back(ptrHeros);
+		vPersonnage.push_back(ptrHeros); 
+	}
+	 
+	for (size_t i : range(nVilains)) {  
+		Vilain vilain(fichierVilains); 
+		shared_ptr<Vilain> ptrVilain = make_shared<Vilain>(vilain);
+		vVilain.push_back(ptrVilain);   
+		vPersonnage.push_back(ptrVilain);  
+	}
+
+	for (auto&& p : vPersonnage) {
+		cout << *p << '\n' << trait << "\n";
+	}
+	for (auto&& h : vHeros) {
+		h->changerCouleur(cout, "94");
+		cout << *h << '\n' << trait << "\n";
+	}
+	for (auto&& v : vVilain) { 
+		v->changerCouleur(cout, "91");
+		cout << *v << '\n' << trait << "\n";
+	}
+
+
 
 }

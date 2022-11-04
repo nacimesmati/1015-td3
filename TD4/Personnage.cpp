@@ -10,7 +10,7 @@ using namespace std;
 using namespace iter;
 
 
-ostream& Personnage:: afficher(ostream& o) const  { return o << "\nNom :\t\t\t" << nom_ << "\nParution :\t\t\t" << titre_; }
+void Personnage:: afficher(ostream& o) const  {  o << "\nNom : " << nom_ << "\nParution : " << titre_; }
  
 const string& Personnage::getTitre() const { return titre_; }
 
@@ -20,6 +20,6 @@ void Personnage::setTitre(const string& titre) { titre_ = titre; }
 
 void Personnage::setNom(const string& nom) { nom_ = nom; }
 
-//void Personnage::changerCouleur(ifstream fichier, string codeCouleur) {
-//
-//}
+ostream& Personnage::changerCouleur(ostream& o, const string& codeCouleur) const {   
+	return o << "\033[" + codeCouleur + "m";  
+}
