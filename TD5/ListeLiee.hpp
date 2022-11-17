@@ -14,11 +14,11 @@ struct Noeud
 	friend class ListeLiee<T>;
 	friend class Iterateur<T>;
 public:
-	Noeud(const T& d) : donnee_(d) {} 
+	Noeud(const T& d) : donnee_(d) {}
 private:
 	Noeud<T>* suivant_ = past_end;
 	Noeud<T>* precedent_ = past_end;
-	T donnee_; 
+	T donnee_;
 	inline static constexpr Noeud<T>* past_end = nullptr;
 };
 
@@ -28,28 +28,31 @@ class Iterateur
 	friend class ListeLiee<T>;
 public:
 	//TODO: Constructeur(s).
-	Iterateur(Noeud<T>* position = nullptr) {}
-
+	Iterateur(Noeud<T>* position = Noeud<T>::past_end) : position_(position) {} 
+	
 	void avancer()
 	{
 		Expects(position_ != nullptr);
 		//TODO: Changez la position de l'itérateur pour le noeud suivant
 		position_ = position_->suivant_;
-		return *this;
 	}
 	void reculer()
 	{
 		//NOTE: On ne demande pas de supporter de reculer à partir de l'itérateur end().
 		Expects(position_ != nullptr);
-		position_ = position_->precedent_; 
-		return *this;
+		position_ = position_->precedent_;
 	}
 	T& operator*()
 	{
 		return position_->donnee_;
 	}
 	//TODO: Ajouter ce qu'il manque pour que les boucles sur intervalles fonctionnent sur une ListeLiee.
-	Iterateur<T>& operator= (const Iterateur<T>&) = default;
+	Iterateur<T>& operator++() {
+		Expects(position_ != nullptr);
+		position_ = position_->suivant_;
+		return *this;
+	}
+
 	bool operator==(const Iterateur<T>& it) const = default;
 private:
 	Noeud<T>* position_;
@@ -63,26 +66,28 @@ public:
 	using iterator = Iterateur<T>;  // Définit un alias au type, pour que ListeLiee<T>::iterator corresponde au type de son itérateur.
 
 	//TODO: La construction par défaut doit créer une liste vide valide.
+	ListeLiee() = default;
+	
 	~ListeLiee()
 	{
 		//TODO: Enlever la tête à répétition jusqu'à ce qu'il ne reste aucun élément.
 		// Pour enlever la tête, 
 		// 1. La tête doit devenir le suivant de la tête actuelle.
 		// 2. Ne pas oublier de désallouer le noeud de l'ancienne tête (si pas fait automatiquement).
-		for (auto& noeud : this) {
-			if (this->size == 1) {
-				delete noeud;
-			}
-			++noeud = noeud;
-			delete noeud;
+		while (tete_ != Noeud<T>::past_end) {
+			auto temp = tete_->suivant_;
+			delete tete_;
+			tete_ = temp;
 		}
+	/*	for (auto& noeud : *this) {
+		}*/
 	}
 
-	bool estVide() const  { return taille_ == 0; }
+	bool estVide() const { return taille_ == 0; }
 	unsigned size() const { return taille_; }
 	//NOTE: to_address (C++20) permet que ce même code fonctionne que vous utilisiez des pointeurs bruts ou intelligents (ça prend le pointeur brut associé au pointeur intelligent, s'il est intelligent).
-	iterator begin()  { return {to_address(tete_)}; }
-	iterator end()    { return {to_address(queue_->suivant_)}; }
+	iterator begin() { return { to_address(tete_) }; }
+	iterator end() { return { to_address(queue_->suivant_) }; }
 
 	// Ajoute à la fin de la liste.
 	void push_back(const T& item)
@@ -124,7 +129,7 @@ public:
 		it.position_->precedent_->suivant_ = nouveauNoeud;
 		++taille_;
 		iterator nouveauIt(nouveauNoeud);
-		return nouveauIt;  
+		return nouveauIt;
 	}
 
 	// Enlève l'élément à la position it et retourne un itérateur vers le suivant.
@@ -146,7 +151,7 @@ public:
 		//NOTE: On ne demande pas de supporter d'effacer le dernier élément (c'est similaire au cas pour enlever le premier).
 		Noeud<T>* courant = it.position_;
 		Noeud<T>* suivant = it.position_->suivant_;
-		Noeud<T>* precedent = it.position_->precedent_; 
+		Noeud<T>* precedent = it.position_->precedent_;
 
 		if (precedent == nullptr) {
 			tete_ = suivant;
@@ -157,7 +162,7 @@ public:
 		}
 		suivant->precedent_ = precedent;
 		delete courant;
-		--taille_; 
+		--taille_;
 		iterator nouveauIt(suivant);
 
 		return nouveauIt;
